@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Universe - Hunza ✨</title>
+    <!-- Premium Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Great+Vibes&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #120005 0%, #300010 40%, #59001e 100%);
+            --card-bg: rgba(18, 0, 5, 0.9);
+            --accent-pink: #ff2a6d;
+            --accent-glow: #ff75a0;
+            --text-light: #fff0f5;
+            --text-muted: #ffb3c6;
+            --card-border: rgba(255, 42, 109, 0.45);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Romantic Moving Canvas Background */
+        #romance-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none;
+        }
+
+        /* Professional Glassmorphism App Frame */
+        .app-window {
+            width: 92%;
+            max-width: 760px;
+            height: 540px;
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 2px solid var(--card-border);
+            border-radius: 32px;
+            box-shadow: 0 0 50px rgba(255, 42, 109, 0.25);
+            position: relative;
+            z-index: 2;
+            overflow: hidden;
+            display: flex;
+            padding: 35px;
+        }
+
+        @media (max-width: 650px) {
+            .app-window {
+                height: 92vh;
+                flex-direction: column;
+                padding: 20px;
+                overflow-y: auto;
+                justify-content: center;
+            }
+        }
+
+        /* Floating Audio Controller */
+        .audio-widget {
+            position: absolute;
+            top: 20px; right: 20px; z-index: 10;
+            background: rgba(255, 42, 109, 0.2); 
+            border: 2px solid var(--accent-pink);
+            width: 44px; height: 44px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; color: #fff;
+            box-shadow: 0 0 15px var(--accent-pink);
+            transition: all 0.3s ease;
+        }
+        .audio-widget:hover { transform: scale(1.1) rotate(15deg); background: var(--accent-pink); }
+
+        /* Screens Setup */
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 25px;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .screen.active {
+            display: grid;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 650px) {
+            .screen { grid-template-columns: 1fr; display: none; }
+            .screen.active { display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: center; }
+        }
+
+        .left-panel {
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: flex-start; text-align: left;
+        }
+        @media (max-width: 650px) { .left-panel { align-items: center; text-align: center; } }
+
+        .right-panel { display: flex; justify-content: center; align-items: center; position: relative; width: 100%; }
+
+        /* Typography */
+        .script-heading {
+            font-family: 'Great Vibes', cursive; font-size: 3.5rem;
+            color: #fff; font-weight: 500; margin-bottom: 10px; line-height: 1.1;
+            text-shadow: 0 0 15px rgba(255, 42, 109, 0.8);
+        }
+        .standard-heading {
+            font-family: 'Great Vibes', cursive; font-size: 2.8rem;
+            color: var(--accent-pink); margin-bottom: 12px;
+            text-shadow: 0 0 10px rgba(255, 71, 126, 0.4);
+        }
+        .body-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 25px; }
+
+        .action-btn {
+            background: var(--accent-pink); color: #fff; border: none;
+            padding: 12px 30px; font-size: 0.95rem; font-weight: 700;
+            border-radius: 30px; cursor: pointer; 
+            box-shadow: 0 0 20px rgba(255, 42, 109, 0.5);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .action-btn:hover { transform: translateY(-3px); box-shadow: 0 0 30px rgba(255, 42, 109, 0.8); background: var(--accent-glow); }
+
+        .bypass-link {
+            margin-top: 15px; font-size: 0.8rem; color: var(--text-muted); text-decoration: underline; cursor: pointer; transition: color 0.2s;
+        }
+        .bypass-link:hover { color: var(--accent-pink); }
+
+        .vector-art { width: 100%; max-height: 250px; object-fit: contain; border-radius: 20px; filter: drop-shadow(0 0 15px rgba(255, 42, 109, 0.4)); }
+
+        /* Clock Countdown Styles */
+        .clock-container {
+            display: flex; gap: 15px; margin: 25px 0; justify-content: center; align-items: center;
+        }
+        .clock-segment {
+            background: rgba(255, 42, 109, 0.1);
+            border: 2px solid var(--card-border);
+            border-radius: 18px;
+            width: 80px; height: 90px;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            box-shadow: 0 0 20px rgba(255, 42, 109, 0.15);
+        }
+        .clock-number {
+            font-size: 2.2rem; font-weight: 700; color: #fff; text-shadow: 0 0 10px var(--accent-pink);
+        }
+        .clock-label {
+            font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; margin-top: 3px; letter-spacing: 0.5px;
+        }
+        .clock-separator {
+            font-size: 2.2rem; color: var(--accent-pink); animation: pulseDot 1s infinite alternate;
+        }
+        @keyframes pulseDot { 0% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        /* ================= MASSIVE MIDNIGHT CELEBRATION OVERLAY ================= */
+        .celebration-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(60, 0, 20, 0.98) 0%, rgba(10, 0, 3, 0.99) 100%);
+            z-index: 999;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        .celebration-overlay.active {
+            display: flex; opacity: 1;
+        }
+        .magic-birthday-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: 5rem;
+            color: #fff;
+            text-shadow: 0 0 20px #ff2a6d, 0 0 40px #ff75a0, 0 0 60px #ff2a6d;
+            animation: textScalePop 1.5s infinite alternate ease-in-out;
+            margin-bottom: 20px;
+        }
+        @keyframes textScalePop {
+            0% { transform: scale(0.95) rotate(-1deg); }
+            100% { transform: scale(1.05) rotate(1deg); }
+        }
+        .magic-subtext {
+            font-size: 1.2rem;
+            color: #ffccd9;
+            letter-spacing: 1px;
+            animation: pulseFade 2s infinite alternate;
+        }
+        @keyframes pulseFade { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+
+        /* Keypad Security PIN */
+        .dots-wrapper { display: flex; gap: 15px; margin: 20px 0; }
+        .pin-dot { width: 15px; height: 15px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid var(--accent-pink); transition: all 0.3s; }
+        .pin-dot.filled { background: var(--accent-pink); box-shadow: 0 0 12px var(--accent-pink); transform: scale(1.2); }
+        .custom-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 220px; }
+        .numeric-key { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border); height: 42px; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; cursor: pointer; font-weight: 700; color: #fff; transition: all 0.2s; }
+        .numeric-key:hover { background: rgba(255, 42, 109, 0.2); border-color: var(--accent-pink); }
+
+        /* Realtime Age Ticker */
+        .live-counter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; margin: 20px 0; }
+        .counter-item { background: rgba(255, 255, 255, 0.03); border: 1.5px solid var(--card-border); padding: 15px 5px; border-radius: 16px; text-align: center; }
+        .counter-big-num { font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: #fff; text-shadow: 0 0 10px var(--accent-pink); }
+        .counter-sub-lbl { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
+
+        /* ================= PROFESSIONAL DECORATED PARTY ROOM ================= */
+        .party-room {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(180deg, #2b0010 0%, #150008 100%);
+            border: 2px solid rgba(255, 42, 109, 0.3);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 0 20px rgba(255, 42, 109, 0.15);
+        }
+
+        .fairy-lights {
+            position: absolute;
+            top: 12px;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background: radial-gradient(circle, #fff 15%, transparent 16%), radial-gradient(circle, #ff2a6d 15%, transparent 16%);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 0;
+            animation: lightFlicker 1s infinite alternate;
+        }
+        @keyframes lightFlicker {
+            0% { opacity: 0.8; filter: drop-shadow(0 0 2px #ff2a6d); }
+            100% { opacity: 1; filter: drop-shadow(0 0 8px #ff75a0); }
+        }
+
+        .birthday-banner {
+            position: absolute;
+            top: 45px;
+            width: 90%;
+            height: 40px;
+            border-bottom: 2px dashed rgba(255, 255, 255, 0.35);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 4px;
+        }
+        .banner-text {
+            font-family: 'Caveat', cursive;
+            font-size: 1.45rem;
+            color: #fff;
+            letter-spacing: 1px;
+            background: rgba(255, 42, 109, 0.85);
+            padding: 3px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--accent-glow);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3), 0 0 10px rgba(255,42,109,0.5);
+            transform: rotate(-1.5deg);
+            animation: bannerSway 3s ease-in-out infinite alternate;
+            transform-origin: center;
+        }
+        @keyframes bannerSway {
+            0% { transform: rotate(-2deg) translateY(0); }
+            100% { transform: rotate(2deg) translateY(-2px); }
+        }
+
+        .balloon-decor {
+            position: absolute;
+            bottom: 20px;
+            font-size: 2rem;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
+            animation: floatUp 4s ease-in-out infinite alternate;
+        }
+        .balloon-left { left: 15px; animation-delay: 0s; }
+        .balloon-right { right: 15px; animation-delay: 0.8s; }
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(-5deg); }
+            100% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        /* 3D LUXURY BIRTHDAY CAKE */
+        .cake-container { position: relative; width: 140px; height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; margin-bottom: 12px; z-index: 5; }
+        .cake-tier { border-radius: 8px 8px 3px 3px; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+        .tier-bottom { width: 110px; height: 35px; background: #6b0024; border: 1.5px solid var(--accent-pink); z-index: 3; }
+        .tier-middle { width: 85px; height: 30px; background: #940033; border: 1.5px solid var(--accent-pink); z-index: 4; margin-bottom: -1px; }
+        .tier-top { width: 60px; height: 25px; background: #ff2a6d; border: 1.5px solid var(--accent-pink); z-index: 5; margin-bottom: -1px; }
+        
+        .cake-tier::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px;
+            background: radial-gradient(circle, #fff 60%, transparent 60%); background-size: 10px 15px; border-radius: 6px 6px 0 0;
+        }
+
+        .candle-stick { width: 6px; height: 24px; background: linear-gradient(to right, #ff75a0, #ff2a6d); position: absolute; top: -24px; left: 50%; transform: translateX(-50%); border-radius: 2px; z-index: 6; }
+        .candle-flame { width: 12px; height: 18px; background: radial-gradient(circle at 50% 100%, #ffeb3b, #ff5722); border-radius: 50% 50% 20% 20%; position: absolute; top: -18px; left: 50%; transform: translateX(-50%); animation: flameWobble 0.6s infinite alternate; cursor: pointer; box-shadow: 0 0 20px #ffeb3b; }
+        @keyframes flameWobble { 0% { transform: translateX(-50%) scale(1) rotate(-3deg); } 100% { transform: translateX(-48%) scale(1.15) rotate(3deg); } }
+        .candle-flame.extinguished { display: none; }
+        
+        .sparkle-magical { position: absolute; font-size: 1rem; color: #ffeb3b; opacity: 0; animation: starSparkle 2s infinite; }
+        @keyframes starSparkle { 0%, 100% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1.2); } }
+
+        /* Premium Photo Grid */
+        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+        .grid-photo-item { width: 100%; height: 85px; object-fit: cover; border-radius: 12px; border: 2.5px solid var(--accent-pink); box-shadow: 0 0 15px rgba(255, 42, 109, 0.2); transition: all 0.3s; }
+        .grid-photo-item:hover { transform: scale(1.08) rotate(3deg); border-color: #fff; }
+
+        /* Romantic Secrets Grid */
+        .secret-box-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+        .secret-card { background: rgba(255, 255, 255, 0.03); border: 2px dashed var(--accent-pink); height: 62px; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-family: 'Great Vibes', cursive; font-size: 1.8rem; color: var(--accent-pink); cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center; box-shadow: 0 0 10px rgba(255, 42, 109, 0.1); }
+        .secret-card:hover { transform: scale(1.05); background: rgba(255, 42, 109, 0.1); border-style: solid; }
+        .secret-card.revealed { background: rgba(255, 42, 109, 0.25); border-style: solid; border-color: var(--accent-pink); font-size: 0.78rem; font-family: 'Quicksand', sans-serif; font-weight: 700; color: #fff; padding: 5px; box-shadow: 0 0 15px rgba(255, 42, 109, 0.3); }
+        
+        .progress-track { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 15px; overflow: hidden; }
+        .progress-fill { width: 0%; height: 100%; background: var(--accent-pink); box-shadow: 0 0 10px var(--accent-pink); transition: width 0.3s; }
+
+        /* Interactive Gift Box Layout */
+        .gift-container { display: flex; flex-direction: column; align-items: center; cursor: pointer; margin: 15px 0; position: relative; }
+        .gift-icon { font-size: 5.5rem; color: var(--accent-pink); animation: wobbleEffect 2s infinite ease-in-out; filter: drop-shadow(0 0 15px var(--accent-pink)); }
+        @keyframes wobbleEffect { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(-8deg); } 40% { transform: rotate(8deg); } 60% { transform: rotate(-5deg); } 80% { transform: rotate(4deg); } }
+
+        /* ================= HIGHLY PROFESSIONAL VIRTUAL GIFT HAMPER POPUP ================= */
+        .gift-hamper-popup {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 0, 3, 0.96);
+            z-index: 100;
+            display: none;
+            padding: 25px;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            overflow-y: auto;
+            animation: scaleInUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes scaleInUp {
+            0% { opacity: 0; transform: scale(0.8) translateY(50px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .hamper-title { font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: var(--accent-glow); margin-bottom: 5px; text-shadow: 0 0 10px var(--accent-pink); }
+        
+        /* Hampers Items Grid layout */
+        .gift-items-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            width: 100%;
+            margin: 10px 0;
+        }
+        @media (max-width: 550px) {
+            .gift-items-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        }
+
+        .gift-item-card {
+            background: rgba(255, 42, 109, 0.08);
+            border: 1.5px solid var(--accent-pink);
+            border-radius: 16px;
+            padding: 12px 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+        }
+        .gift-item-card:hover { transform: translateY(-4px); background: rgba(255, 42, 109, 0.18); box-shadow: 0 0 15px var(--accent-pink); }
+        .gift-item-card i { font-size: 2.2rem; color: var(--accent-glow); margin-bottom: 8px; filter: drop-shadow(0 0 5px var(--accent-pink)); }
+        .gift-item-card p { font-size: 0.78rem; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* The Special Sweet Letter inside Gift Hamper */
+        .gift-inner-letter {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 3px solid var(--accent-pink);
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: #ffeef2;
+            text-align: justify;
+            margin-bottom: 15px;
+            max-height: 130px;
+            overflow-y: auto;
+        }
+        .gift-inner-letter::-webkit-scrollbar { width: 4px; }
+        .gift-inner-letter::-webkit-scrollbar-thumb { background: var(--accent-pink); }
+
+        /* Scrollable Content */
+        .scrollable-content { max-height: 240px; overflow-y: auto; padding-right: 10px; text-align: left; }
+        .scrollable-content::-webkit-scrollbar { width: 5px; }
+        .scrollable-content::-webkit-scrollbar-thumb { background: var(--accent-pink); border-radius: 10px; }
+        
+        /* Romantic Roman Urdu Font Styling */
+        .roman-urdu-text { font-family: 'Quicksand', sans-serif; font-size: 1.05rem; line-height: 1.8; color: var(--text-light); text-align: justify; }
+        .roman-urdu-text p { margin-bottom: 15px; }
+        .english-subquote { font-family: 'Great Vibes', cursive; font-size: 2rem; color: var(--accent-pink); display: block; text-align: center; margin-top: 15px; text-shadow: 0 0 10px rgba(255, 42, 109, 0.4); }
+    </style>
+</head>
+<body>
+
+    <!-- Continuous Romantic Canvas Particles (Hearts, Rose Petals, Confetti) -->
+    <canvas id="romance-canvas"></canvas>
+    
+    <!-- Romantic Instrumental Music (Piano & Violin mix) -->
+    <audio id="bg-audio-player" loop src="music.mp3"></audio>
+
+    <!-- GRAND MIDNIGHT CELEBRATION OVERLAY (Fades in at 12:00:00 AM) -->
+    <div class="celebration-overlay" id="midnight-celebration-screen">
+        <h1 class="magic-birthday-text">Happy Birthday Hunza! 💖</h1>
+        <p class="magic-subtext">✨ Entering Your Romantic Universe... ✨</p>
+    </div>
+
+    <div class="app-window" style="position: relative;">
+        <!-- Audio Trigger Button -->
+        <div class="audio-widget" onclick="toggleAudioPlayback()">
+            <i class="fa-solid fa-heart" id="audio-icon"></i>
+        </div>
+
+        <!-- ================= HIGHLY PROFESSIONAL VIRTUAL GIFT HAMPER POPUP ================= -->
+        <div class="gift-hamper-popup" id="hamper-popup-screen">
+            <h2 class="hamper-title">Gifts For My Universe, Hunza! 🎁</h2>
+            
+            <!-- Gifts Grid Showcase -->
+            <div class="gift-items-grid">
+                <div class="gift-item-card">
+                    <i class="fa-solid fa-spa"></i>
+                    <p>Red Roses</p>
+                </div>
+                <div class="gift-item-card">
+                    <i class="fa-solid fa-cookie-bite"></i>
+                    <p>Chocolates</p>
+                </div>
+                <div class="gift-item-card">
+                    <i class="fa-solid fa-ring"></i>
+                    <p>Promise Ring</p>
+                </div>
+                <div class="gift-item-card">
+                    <i class="fa-solid fa-gem"></i>
+                    <p>Glass Bangles</p>
+                </div>
+            </div>
+
+            <!-- Heart-touching Little Love Note Inside Gift Hamper -->
+            <div class="gift-inner-letter">
+                <p><strong>Hunza, meri jaan... ♥</strong> Tum mere liye is duniya mein sab se zyada khaas ho. Tum wo wahid aur sab se pyari larki ho jis se main ne apni zindagi mein sab se zyada aur toot kar mohabbat ki hai. Humare darmiyan ye dooriyan zaroor hain, par mera ye dil har pal sirf tumhare liye hi dharakta hai. Happy Birthday Hunza, my love, my absolute everything! ✨</p>
+            </div>
+
+            <button class="action-btn" onclick="acceptHamperGifts()">Accept Gifts & Letter ୨💌</button>
+        </div>
+
+        <!-- PRE-PAGE 0: MIDNIGHT TICKER COUNTDOWN (11:59 -> 12:00) -->
+        <div class="screen active" id="p0-countdown">
+            <div class="left-panel" style="grid-column: span 2; align-items: center; text-align: center; width: 100%;">
+                <h1 class="script-heading">Waiting for Midnight... 🕛</h1>
+                <p class="body-desc" style="color: #ffccd9; margin-bottom: 10px;">The clock is ticking down to Hunza's Special Moment</p>
+                
+                <!-- Live Countdown Clock Ticker (Hours, Minutes, Seconds) -->
+                <div class="clock-container">
+                    <div class="clock-segment">
+                        <div class="clock-number" id="clock-hours">00</div>
+                        <div class="clock-label">Hours</div>
+                    </div>
+                    <div class="clock-separator">:</div>
+                    <div class="clock-segment">
+                        <div class="clock-number" id="clock-mins">00</div>
+                        <div class="clock-label">Mins</div>
+                    </div>
+                    <div class="clock-separator">:</div>
+                    <div class="clock-segment">
+                        <div class="clock-number" id="clock-secs">00</div>
+                        <div class="clock-label">Secs</div>
+                    </div>
+                </div>
+                
+                <div class="bypass-link" id="bypass-timer" onclick="triggerMidnightMagic()">Bypass Clock & Celebrate Right Now ♥</div>
+            </div>
+        </div>
+
+        <!-- PAGE 1: DEEP ROMANTIC INTRODUCTION -->
+        <div class="screen" id="p1-welcome">
+            <div class="left-panel">
+                <h1 class="script-heading" style="font-size: 3.2rem;">My Universe, Hunza 🌌</h1>
+                <p class="body-desc" style="color: #ffccd9;">Three beautiful years of holding your love in my heart. Today is your day, Hunza. Enter this little digital sanctuary made only for you.</p>
+                <button class="action-btn" onclick="switchView('p2-auth')">Unlock Hunza's Space ୨💋</button>
+            </div>
+            <div class="right-panel">
+                <img class="vector-art" src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500" alt="Magic Love Graphic">
+            </div>
+        </div>
+
+        <!-- PAGE 2: HEARTBEAT SECURITY ACCESS CODE -->
+        <div class="screen" id="p2-auth">
+            <div class="left-panel">
+                <h2 class="standard-heading" style="font-size: 2.5rem;">Hunza's Special Date</h2>
+                <p class="body-desc" style="margin-bottom: 10px; color: #ffccd9;">Enter Hunza's birth date (DDMM) to step inside my heart.</p>
+                <div class="dots-wrapper">
+                    <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+                </div>
+            </div>
+            <div class="right-panel">
+                <div class="custom-keypad">
+                    <div class="numeric-key" onclick="typePin('1')">1</div><div class="numeric-key" onclick="typePin('2')">2</div><div class="numeric-key" onclick="typePin('3')">3</div>
+                    <div class="numeric-key" onclick="typePin('4')">4</div><div class="numeric-key" onclick="typePin('5')">5</div><div class="numeric-key" onclick="typePin('6')">6</div>
+                    <div class="numeric-key" onclick="typePin('7')">7</div><div class="numeric-key" onclick="typePin('8')">8</div><div class="numeric-key" onclick="typePin('9')">9</div>
+                    <div class="numeric-key" onclick="resetPinInput()"><i class="fa-solid fa-trash-can"></i></div><div class="numeric-key" onclick="typePin('0')">0</div><div class="numeric-key" onclick="backspacePin()"><i class="fa-solid fa-delete-left"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 3: AGE REALTIME TICKER (MILESTONE) -->
+        <div class="screen" id="p3-counter">
+            <div class="left-panel">
+                <h2 class="standard-heading" style="font-size: 2.2rem;">Hunza's Golden Years</h2>
+                <p class="body-desc" style="margin-bottom:5px; color: #ffccd9;">Hunza has existed in this world and made it beautiful for:</p>
+                <div class="live-counter-grid">
+                    <div class="counter-item"><div class="counter-big-num" id="live-yrs">0</div><div class="counter-sub-lbl">Years</div></div>
+                    <div class="counter-item"><div class="counter-big-num" id="live-mos">0</div><div class="counter-sub-lbl">Months</div></div>
+                    <div class="counter-item"><div class="counter-big-num" id="live-dys">0</div><div class="counter-sub-lbl">Days</div></div>
+                </div>
+                <button class="action-btn" style="margin-top:10px;" onclick="switchView('p4-cake')">Make Hunza's Wish 🎂</button>
+            </div>
+            <div class="right-panel">
+                <p style="font-size: 0.85rem; color: var(--accent-pink); font-weight: 700; text-align: center; line-height: 1.5;" id="precise-ticks">Calculating the moments Hunza blessed my world...</p>
+            </div>
+        </div>
+
+        <!-- PAGE 4: ROMANTIC CANDLE BLOW INTERACTION WITH DECORATED ROOM -->
+        <div class="screen" id="p4-cake">
+            <div class="left-panel">
+                <h2 class="standard-heading" id="cake-title">Hunza's Room</h2>
+                <p class="body-desc" id="cake-subtitle" style="color: #ffccd9;">Humara pyara sa virtual room tyar hai! Hunza, ek khubsoorat si wish mango aur glowing candle ko blow karo.</p>
+                <button class="action-btn" id="cake-next-btn" style="display: none;" onclick="switchView('p5-gallery')">Hunza's Memories ୨📂</button>
+            </div>
+            <div class="right-panel">
+                <!-- Saja Hua Romantica Room -->
+                <div class="party-room">
+                    <!-- Glowing Fairy Lights -->
+                    <div class="fairy-lights"></div>
+                    
+                    <!-- Happy Birthday Hanging Banner -->
+                    <div class="birthday-banner">
+                        <div class="banner-text">Happy Birthday Hunza!</div>
+                    </div>
+
+                    <!-- Hanging Balloons -->
+                    <div class="balloon-decor balloon-left">🎈</div>
+                    <div class="balloon-decor balloon-right">💝</div>
+
+                    <!-- 3D Luxury Birthday Cake -->
+                    <div class="cake-container">
+                        <div class="candle-stick"><div class="candle-flame" id="flame" onclick="blowCandle()"></div></div>
+                        <div class="cake-tier tier-top"><div class="sparkle-magical" style="top:-10px; left:10px;">✦</div></div>
+                        <div class="cake-tier tier-middle"><div class="sparkle-magical" style="top:5px; right:10px; animation-delay:0.5s;">✦</div></div>
+                        <div class="cake-tier tier-bottom"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 5: EMOTIONAL PHOTO GRID GALLERY -->
+        <div class="screen" id="p5-gallery">
+            <div class="left-panel">
+                <h2 class="standard-heading" style="font-size: 2.2rem;">Hunza's Time Capsule</h2>
+                <p class="body-desc" style="color: #ffccd9;">Every picture represents a chapter of my silent devotion, a glimpse of the beautiful soul you are to me, Hunza.</p>
+                <button class="action-btn" onclick="switchView('p6-interactive')">Hunza's Secrets 👑</button>
+            </div>
+            <div class="right-panel">
+                <div class="photo-grid">
+                    <img class="grid-photo-item" src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=300" alt="1">
+                    <img class="grid-photo-item" src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300" alt="2">
+                    <img class="grid-photo-item" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300" alt="3">
+                    <img class="grid-photo-item" src="https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=300" alt="4">
+                    <img class="grid-photo-item" src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=300" alt="5">
+                    <img class="grid-photo-item" src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=300" alt="6">
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 6: ROMANTIC CARD DEVIATIONS -->
+        <div class="screen" id="p6-interactive">
+            <div class="left-panel">
+                <h2 class="standard-heading" style="font-size: 2rem;">Why I Love Hunza...</h2>
+                <p class="body-desc" style="font-size: 0.85rem; color: #ffccd9;">Click on the mystery hearts to uncover some of my deepest feelings for you, Hunza.</p>
+                <button class="action-btn" id="interactive-next-btn" style="display: none;" onclick="switchView('p7-gift')">Hunza's Gift 🎁</button>
+            </div>
+            <div class="right-panel" style="flex-direction: column;">
+                <div class="secret-box-grid">
+                    <div class="secret-card" onclick="revealCard(this, 'Hunza\'s Safety 🏡')">♥</div>
+                    <div class="secret-card" onclick="revealCard(this, 'Pure Heart ✨')">♥</div>
+                    <div class="secret-card" onclick="revealCard(this, 'Sweet Voice 🎵')">♥</div>
+                    <div class="secret-card" onclick="revealCard(this, 'Kind Soul 🌸')">♥</div>
+                    <div class="secret-card" onclick="revealCard(this, 'Best Smile 😁')">♥</div>
+                    <div class="secret-card" onclick="revealCard(this, 'So Smart 🧠')">♥</div>
+                    <div class="secret-card" onclick="revealCard(this, 'Cute Laugh 🤭')">♥</div>
+                    <div class="secret-card" onclick="revealCard(this, 'Pure Magic 🪄')">♥</div>
+                    <div class="secret-card" onclick="revealCard(this, 'My World 🌍')">♥</div>
+                </div>
+                <div class="progress-track"><div class="progress-fill" id="card-progress"></div></div>
+            </div>
+        </div>
+
+        <!-- PAGE 7: SURPRISE UNWRAP BOX WITH POPUP GESTURE -->
+        <div class="screen" id="p7-gift">
+            <div class="left-panel" style="align-items: center; text-align: center; grid-column: span 2;">
+                <h2 class="standard-heading">A Gift for Hunza!</h2>
+                <p class="body-desc" id="gift-desc" style="color: #ffccd9;">Click the gift box below to unwrap my special birthday wishes for you, Hunza.</p>
+                <div class="gift-container" onclick="openGiftBox()"><i class="fa-solid fa-box-open gift-icon" id="box-element"></i></div>
+            </div>
+        </div>
+
+        <!-- PAGE 8: PROFESSIONAL DEEP ROMAN URDU LOVE LETTER -->
+        <div class="screen" id="p8-wishes">
+            <div class="left-panel" style="width: 100%; grid-column: span 2; align-items: center;">
+                <h1 class="script-heading" style="font-size: 2.8rem; margin-bottom: 5px;">Happy Birthday, Hunza! ♥</h1>
+                <div class="scrollable-content roman-urdu-text" style="width: 100%;">
+                    <p><strong>Hunza!</strong> Allah pak aap ko wo tamam khushiyan aur gehra sukoon ata farmaye jis ki aap haqdaar hain.</p>
+                    
+                    <p>Humari mohabbat ke in khubsoorat <strong>teen saalon</strong> mein yeh pehla mauqa hai ke main aap ko is tarah apni mohabbat ka nadrana pesh kar raha hoon. Main jaanta hoon ke halaat ki wajah se hum mil nahi sakte aur aap mujh se kisi physical gift ki umeed bhi nahi kar rahi thin, kyunki physical distances humare beige majood hain aur main aap ke samne baith kar gift nahi de sakta.</p>
+                    
+                    <p>Isi liye main ne apne dil ki dharakanon aur mohabbat ke tamam ehsaasata ko is digital kainat mein samet diya hai, taake jab bhi aap ise kholen, aap ko meri be-panah mohabbat ka ehsaas ho. Aap mujh se door ho kar bhi mere dil ke sab se qareeb hain, aur yeh rishta waqt ya faaslon ka mohtaj nahi hai.</p>
+                    
+                    <p>Janam din buhat buhat mubarak ho, meri puri kainat Hunza!</p>
+                    
+                    <span class="english-subquote">
+                    "Three years of loving Hunza, and forever to go. Distance means nothing."
+                    </span>
+                </div>
+                <button class="action-btn" style="margin-top: 15px;" onclick="restartApp()">Replay Hunza's Heart ↻</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const AUTH_KEY = "1807"; // Date of Birth Key (18th July)
+        let typedPass = "";
+        let uncoveredCardsCount = 0;
+        const totalCardsCount = 9;
+        const musicTrack = document.getElementById('bg-audio-player');
+        const iconWidget = document.getElementById('audio-icon');
+
+        // Target Date for Birthday Midnight: 18th July of 2026
+        const targetBirthdayDate = new Date(2026, 6, 18, 0, 0, 0); // Month is 0-indexed (6 = July)
+
+        // Live Clock Ticker targeting Midnight
+        function runMidnightCountdown() {
+            const now = new Date();
+            let difference = targetBirthdayDate - now;
+
+            // If the birthday date has already passed, target the next year's
+            if (difference < 0) {
+                targetBirthdayDate.setFullYear(targetBirthdayDate.getFullYear() + 1);
+                difference = targetBirthdayDate - now;
+            }
+
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            // If there's still days left, we combine days into hours for a continuous clock ticking look!
+            const totalHours = Math.floor(difference / (1000 * 60 * 60));
+
+            document.getElementById('clock-hours').textContent = totalHours.toString().padStart(2, '0');
+            document.getElementById('clock-mins').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('clock-secs').textContent = seconds.toString().padStart(2, '0');
+
+            // Trigger magical celebration automatically when countdown hits 0!
+            if (difference <= 0) {
+                clearInterval(countdownInterval);
+                triggerMidnightMagic();
+            }
+        }
+
+        const countdownInterval = setInterval(runMidnightCountdown, 1000);
+        runMidnightCountdown(); // Run instantly
+
+        // Function that triggers the GRAND Midnight Birthday Explosion Overlay!
+        function triggerMidnightMagic() {
+            // Play background romantic music
+            musicTrack.play().then(() => {
+                iconWidget.className = "fa-solid fa-compact-disc fa-spin";
+            }).catch(e => console.log("Waiting for user interaction..."));
+
+            const overlay = document.getElementById('midnight-celebration-screen');
+            overlay.classList.add('active');
+
+            // Burst non-stop beautiful hearts and confetti particles
+            let burstCount = 0;
+            const burstInterval = setInterval(() => {
+                generateCelebrationExplosion();
+                burstCount++;
+                if (burstCount > 6) clearInterval(burstInterval); // Stop interval after several bursts
+            }, 600);
+
+            // After 5 seconds of the grand celebration, fade out overlay and open the actual website
+            setTimeout(() => {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.classList.remove('active');
+                    switchView('p1-welcome');
+                }, 1000);
+            }, 5500);
+        }
+
+        function toggleAudioPlayback() {
+            if (musicTrack.paused) {
+                musicTrack.play().catch(err => console.log(err));
+                iconWidget.className = "fa-solid fa-compact-disc fa-spin";
+            } else {
+                musicTrack.pause();
+                iconWidget.className = "fa-solid fa-heart";
+            }
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+            const dest = document.getElementById(viewId);
+            if(dest) dest.classList.add('active');
+            if (viewId === 'p3-counter') initiateAgeTicker();
+        }
+
+        /* Keyboard PIN input logic */
+        function typePin(digit) {
+            if (typedPass.length < 4) { typedPass += digit; updateDots(); }
+            if (typedPass.length === 4) { setTimeout(validatePin, 250); }
+        }
+        function backspacePin() { typedPass = typedPass.slice(0, -1); updateDots(); }
+        function resetPinInput() { typedPass = ""; updateDots(); }
+        function updateDots() {
+            const dots = document.querySelectorAll('.pin-dot');
+            dots.forEach((dot, idx) => {
+                if (idx < typedPass.length) dot.classList.add('filled');
+                else dot.classList.remove('filled');
+            });
+        }
+        function validatePin() {
+            if (typedPass === AUTH_KEY) { switchView('p3-counter'); } 
+            else { alert("Incorrect Date Code! Please try again with Hunza's birth day & month."); resetPinInput(); }
+        }
+
+        /* Realtime Ticker for Golden Years starting 2004 */
+        function initiateAgeTicker() {
+            const birthStamp = new Date("2004-07-18T00:00:00"); // 18th July 2004
+            function runTicker() {
+                const rightNow = new Date();
+                let yrs = rightNow.getFullYear() - birthStamp.getFullYear();
+                let mos = rightNow.getMonth() - birthStamp.getMonth();
+                let dys = rightNow.getDate() - birthStamp.getDate();
+                if (dys < 0) { mos--; dys += new Date(rightNow.getFullYear(), rightNow.getMonth(), 0).getDate(); }
+                if (mos < 0) { yrs--; mos += 12; }
+                
+                document.getElementById('live-yrs').textContent = yrs;
+                document.getElementById('live-mos').textContent = mos;
+                document.getElementById('live-dys').textContent = dys;
+                
+                const netSecs = Math.floor((rightNow - birthStamp) / 1000);
+                document.getElementById('precise-ticks').innerHTML = `✨ Lifetime of Love for Hunza ✨<br><span style="font-size:1.15rem; color:#fff; background:var(--accent-pink); padding:4px 10px; border-radius:10px; display:inline-block; margin-top:5px; box-shadow: 0 0 10px var(--accent-pink);">${netSecs.toLocaleString()} Seconds</span><br>of beautiful presence in my universe`;
+            }
+            setInterval(runTicker, 1000); runTicker();
+        }
+
+        /* Birthday Cake Blow */
+        function blowCandle() {
+            document.getElementById('flame').classList.add('extinguished');
+            document.getElementById('cake-title').textContent = "Happy Birthday Hunza! 🎉";
+            document.getElementById('cake-subtitle').textContent = "May all Hunza's silent wishes reach the sky today.";
+            
+            document.querySelectorAll('.sparkle-magical').forEach(s => s.style.opacity = '1');
+            generateCelebrationExplosion(); 
+            setTimeout(() => { document.getElementById('cake-next-btn').style.display = 'inline-block'; }, 400);
+        }
+
+        /* Heart Reveal Cards */
+        function revealCard(card, msg) {
+            if (!card.classList.contains('revealed')) {
+                card.classList.add('revealed'); card.textContent = msg; uncoveredCardsCount++;
+                const percent = (uncoveredCardsCount / totalCardsCount) * 100;
+                document.getElementById('card-progress').style.width = `${percent}%`;
+                if (uncoveredCardsCount === totalCardsCount) { document.getElementById('interactive-next-btn').style.display = 'inline-block'; }
+            }
+        }
+
+        /* Virtual Gift Box */
+        function openGiftBox() {
+            const box = document.getElementById('box-element');
+            box.className = "fa-solid fa-gift gift-icon";
+            box.style.color = "#ff1493"; box.style.animation = "none";
+            generateCelebrationExplosion();
+            
+            setTimeout(() => {
+                document.getElementById('hamper-popup-screen').style.display = 'flex';
+            }, 600);
+        }
+
+        function acceptHamperGifts() {
+            document.getElementById('hamper-popup-screen').style.display = 'none';
+            switchView('p8-wishes');
+        }
+
+        function restartApp() {
+            uncoveredCardsCount = 0; typedPass = "";
+            document.getElementById('card-progress').style.width = '0%';
+            document.getElementById('interactive-next-btn').style.display = 'none';
+            document.getElementById('cake-next-btn').style.display = 'none';
+            document.getElementById('flame').classList.remove('extinguished');
+            document.querySelectorAll('.sparkle-magical').forEach(s => s.style.opacity = '0');
+            document.getElementById('cake-title').textContent = "Hunza's Room";
+            document.getElementById('cake-subtitle').textContent = "Humara pyara sa virtual room tyar hai! Hunza, ek khubsoorat si wish mango aur glowing candle ko blow karo.";
+            document.querySelectorAll('.secret-card').forEach(c => { c.classList.remove('revealed'); c.textContent = '♥'; });
+            const box = document.getElementById('box-element');
+            box.className = "fa-solid fa-box-open gift-icon"; box.style.color = "var(--accent-pink)";
+            document.getElementById('gift-desc').textContent = "Click the gift box below to unwrap my special birthday wishes for you, Hunza.";
+            document.getElementById('hamper-popup-screen').style.display = 'none';
+            updateDots(); switchView('p0-countdown');
+        }
+
+        /* ROMANTIC PARTICLE MESH (HEARTS, CONFETTI & PETALS) */
+        const canvas = document.getElementById('romance-canvas'); const ctx = canvas.getContext('2d'); let particles = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+
+        class Particle {
+            constructor(bx = null, by = null, isExplosion = false, particleType = 'heart') {
+                this.ex = isExplosion; 
+                this.type = particleType; 
+                this.x = bx !== null ? bx : Math.random() * canvas.width; 
+                this.y = by !== null ? by : (isExplosion ? by : Math.random() * canvas.height);
+                this.s = Math.random() * 6 + 3; 
+                this.sy = isExplosion ? (Math.random() - 0.7) * 14 : (Math.random() * 1.5 + 0.5); 
+                this.sx = isExplosion ? (Math.random() - 0.5) * 14 : (Math.random() - 0.5) * 1.5; 
+                this.o = Math.random() * 0.7 + 0.3;
+                this.color = ['#ff2a6d', '#ff75a0', '#ffccd9', '#ffffff', '#ffd700', '#ff4081'][Math.floor(Math.random() * 6)];
+                this.rotation = Math.random() * Math.PI;
+                this.rSpeed = (Math.random() - 0.5) * 0.05;
+            }
+            draw() {
+                ctx.save(); 
+                ctx.globalAlpha = this.o; 
+                ctx.fillStyle = this.color; 
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.beginPath();
+                
+                if (this.type === 'heart') {
+                    ctx.shadowBlur = 10; ctx.shadowColor = this.color;
+                    ctx.moveTo(0, 0);
+                    ctx.bezierCurveTo(-this.s, -this.s, -this.s*2, this.s/1.5, 0, this.s*2);
+                    ctx.bezierCurveTo(this.s*2, this.s/1.5, this.s, -this.s, 0, 0);
+                    ctx.fill();
+                } else if (this.type === 'petal') {
+                    ctx.moveTo(0, 0);
+                    ctx.bezierCurveTo(-this.s, -this.s*1.5, -this.s, this.s*1.5, 0, this.s*2);
+                    ctx.bezierCurveTo(this.s, this.s*1.5, this.s, -this.s*1.5, 0, 0);
+                    ctx.fill();
+                } else {
+                    ctx.fillRect(-this.s, -this.s/2, this.s*2, this.s);
+                }
+                ctx.restore();
+            }
+            update() {
+                this.y += this.sy; this.x += this.sx;
+                this.rotation += this.rSpeed;
+                if (this.ex) { 
+                    this.o -= 0.008; 
+                    this.sy += 0.05; 
+                } else {
+                    if (this.y > canvas.height) {
+                        this.y = -10;
+                        this.x = Math.random() * canvas.width;
+                    }
+                }
+            }
+        }
+        
+        for (let i = 0; i < 60; i++) particles.push(new Particle(null, null, false, Math.random() > 0.5 ? 'heart' : 'petal'));
+        
+        function generateCelebrationExplosion() { 
+            const types = ['heart', 'petal', 'confetti'];
+            const startX = canvas.width / 2;
+            const startY = canvas.height / 2;
+            for (let i = 0; i < 150; i++) {
+                const randomType = types[Math.floor(Math.random() * types.length)];
+                particles.push(new Particle(startX, startY, true, randomType)); 
+            }
+        }
+        
+        function loop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((h, i) => { 
+                h.update(); 
+                h.draw(); 
+                if (h.ex && h.o <= 0) particles.splice(i, 1); 
+            });
+            requestAnimationFrame(loop);
+        }
+        requestAnimationFrame(loop);
+    </script>
+</body>
+</html>
